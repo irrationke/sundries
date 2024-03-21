@@ -1,0 +1,26 @@
+---
+- name: 安装官方redis剧本
+  hosts: 
+  tasks:
+    - name: yum包管理工具安装redis-stack-server
+      block:
+        - name: 添加Redis源仓库
+          yum_repository:
+            name: "Redis"
+            descriptin: "这是redis官方的redis stack源仓库"
+            baseurl: "http://packages.redis.io/rpm/rhel7"
+            gpgkey: "https://packages.redis.io/gpg"
+            gpgcheck: true
+            enabled: true
+
+        - name: 使用yum安装redis-stack-server
+          yum:
+            name: "redis-stack-server"
+            state: "installed"
+            update_cache: true
+
+      when: ansible_pkg_mgr == "dnf"
+
+    - name: apt包管理工具安装redis-stack-server
+      block:
+        - name: 
