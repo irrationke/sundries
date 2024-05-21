@@ -1,0 +1,60 @@
+---
+- name: 安装docker
+  hosts:
+  tasks:
+    - name: yum安装docker
+      block:
+        - name: 设置docker-ce.repo
+          yum_repository:
+            name: "docker-ce.repo"
+            descriptin: "这是docker官方的docker-ce源仓库"
+            baseurl: "https://download.docker.com/linux/centos/docker-ce.repo"
+            gpgkey: "https://download.docker.com/linux/centos/gpg"
+            gpgcheck: yes
+            enabled: yes
+
+        - name: 使用yum安装docker
+          yum:
+            name: "docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+            state: "installed"
+            update_cache: yes
+          register: docker_installed
+        
+        - name: 启动docker
+          systemd:
+            name: docker
+            state: started
+            enabled: yes
+            daemon_reload: yes
+          when: docker_installed.changed
+      when: ansible_pkg_mgr == "yum"
+
+    - name: apt安装docker
+      block:
+        - name: 添加Docker's official GPG key
+          ansible.builtin.get_url:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            dest: /etc/apt/keyrings/docker.asc
+            mode: +x
+            # checksum: sha256:
+
+        - name: 添加apt-docker仓库
+          ansible.builtin.apt_repository:
+            repo: "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable"
+            state: present
+
+        - name: 使用apt安装docker
+          apt:
+            name: "docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+            state: "installed"
+            update_cache: yes
+          register: docker_installed
+        
+        - name: 启动docker
+          systemd:
+            name: docker
+            state: started
+            enabled: yes
+            daemon_reload: yes
+          when: docker_installed.changed
+      when: ansible_pkg_mgr == "apt"
