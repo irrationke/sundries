@@ -1,0 +1,13 @@
+[Unit]
+Description=Prometheus Server
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network-online.target
+
+[Service]
+User=root
+Restart=on-failure
+ExecStart=/usr/sbin/prometheus \
+  --config.file=/etc/sysconfig/prometheus
+
+[Install]
+WantedBy=multi-user.target
