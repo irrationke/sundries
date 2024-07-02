@@ -1,0 +1,4 @@
+# 使用ansible部署Grafana和Prometheus集成监控
+
+使用node_exporter和mysqld_exporter收集数据。
+
