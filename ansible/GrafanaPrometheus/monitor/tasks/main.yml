@@ -1,0 +1,30 @@
+---
+# tasks file for monitor
+- name: 创建相关文件夹
+  file:
+    owner: ansible
+    mode: '0644'
+    group: ansible
+    path: '/opt/monitor/{{ item }}'
+    state: directory
+    loop:
+      - grafana
+      - prometheus
+
+- name: 下载相关软件包
+  get_url:
+    url: {{ item.url }}
+    dest: "/opt/monitor/{{ item.dir }}"
+    loop:
+      - { dir: grafana, url: }
+      - { dir: prometheus, url: }
+
+- name: 复制相关软件包
+  copy:
+    src: grafana
+    dest: 
+    loop:
+      - {file: , dir:}
+      - {file: , dir:}
+      - {file: , dir:}
+      - {file: , dir:}
