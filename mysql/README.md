@@ -34,4 +34,11 @@ create user upstream@'66.77.2.3' identified by '3rbxXzrhM8!';
 
 ## 授权数据库给用户
 
+## 执行SQL语句并将日志定向到标准输出
 
+```shell
+mysql -u 用户名 -p 数据库名 --verbose < /path/to/script.sql
+
+# 示例
+mysql -u root -p heyue_stock_quotes --verbose < /opt/data/2024.7.3/index_nasdaq.sql
+```
