@@ -58,3 +58,11 @@ sudo firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source addre
 ```shell
 sudo firewall-cmd --reload
 ```
+
+# 创建SSH密钥对
+
+```shell
+ssh-keygen -m PEM -t rsa -b 4096 -C "name@hostname"
+# 参数解析 -m 密钥格式 -t 密钥类型 -b 密钥位数 -C 公钥末尾识别文本 -f 保存名称 -N 私钥密码
+```
+
