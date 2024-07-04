@@ -42,3 +42,10 @@ mysql -u 用户名 -p 数据库名 --verbose < /path/to/script.sql
 # 示例
 mysql -u root -p heyue_stock_quotes --verbose < /opt/data/2024.7.3/index_nasdaq.sql
 ```
+
+## 生成清空数据库中所有表数据的命令
+
+```shell
+# -D指定数据库 -e要执行的sql语句 
+mysql -uroot -p -D your_database_name -e "select concat('TRUNCATE TABLE', table_name, ';') from information_schema.tables where table_schema = 'your_database_name';" > truncate_tables.sql
+```
