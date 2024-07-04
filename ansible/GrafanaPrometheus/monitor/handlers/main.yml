@@ -1,2 +1,13 @@
 ---
 # handlers file for monitor
+- name: startMonitor
+  ansible.builtin.systemd_service:
+    daemon_reload: yes
+    enabled: true
+    state: restarted
+    name: { { item } }
+  loop:
+    - mysqld_exporter
+    - node_exporter
+    - grafana
+    - prometheus

@@ -8,46 +8,56 @@
     state: directory
     path: "/opt/monitor"
 
-- name: 复制相关软件包
+- name: 复制相关资源
   copy:
-    src: { { item.file } }
-    dest: { { item.dir } }
-    loop:
-      - { file: node_exporter_1.8.1, dir: /opt/monitor }
-      - { file: "", dir }
-      - { file: "", dir }
-      - { file: "", dir }
-  when: ipv4.net and item.file != grafana
-
-- name: 创建相关文件夹
-  file:
-    mode: "0644"
-    owner: ansible
-    group: ansible
-    state: directory
-    path: "/opt/monitor/{{ item }}"
-    loop:
-      - node_exporter
-      - mysqld_exporter
-      - grafana
-      - prometheus
-
-- name: 下载相关软件包
-  get_url:
-    url: { { item.url } }
+    src: "{{ item.file }}"
     dest: "/opt/monitor/{{ item.dir }}"
-    loop:
-      - { dir: node_exporter, url }
-      - { dir: mysqld_exporter, url }
-      - { dir: prometheus, url }
-      - { dir: grafana, url }
+  loop:
+    - { file: node_exporter/node_exporter_1.8.1, dir: node_exporter }
+    - { file: node_exporter/node_exporter.service, dir: node_exporter }
+    - { file: mysqld_exporter/mysqld_exporter_0.15.1, dir: mysqld_exporter }
+    - { file: mysqld_exporter/my.cnf, dir: mysqld_exporter }
+    - { file: mysqld_exporter/mysqld_exporter.service, dir: mysqld_exporter }
+    - { file: prometheus/prometheus_2.45.6, dir: prometheus }
+    - { file: prometheus/prometheus.yml, dir: prometheus }
+    - { file: prometheus/prometheus.service, dir: prometheus }
+    - { file: grafana/grafana-enterprise-11.1.0-1.x86_64.rpm, dir: grafana }
+  when: ansible_default_ipv4['address'] != master and item.file != grafana/grafana-enterprise-11.1.0-1.x86_64.rpm
+  notify: startMonitor
 
-- name: 复制相关软件包
-  copy:
-    src: { { item.file } }
-    dest: { { item.dir } }
-    loop:
-      - { file: node_exporter_1.8.1, dir: /opt/monitor }
-      - { file: "", dir }
-      - { file: "", dir }
-      - { file: "", dir }
+- name: 安装grafana软件rpm包--dnf
+  dnf:
+    state: present
+    name: /opt/monitor/grafana/grafana-enterprise-11.1.0-1.x86_64.rpm
+  when: ansible_pkg_mgr == "dnf"
+
+- name: 安装grafana软件rpm包--yum
+  yum:
+    state: present
+    name: /opt/monitor/grafana/grafana-enterprise-11.1.0-1.x86_64.rpm
+  when: ansible_pkg_mgr == "yum"
+
+- meta: flush_handlers
+# - name: 创建相关文件夹
+#   file:
+#     mode: "0644"
+#     owner: ansible
+#     group: ansible
+#     state: directory
+#     path: "/opt/monitor/{{ item }}"
+#     loop:
+#       - node_exporter
+#       - mysqld_exporter
+#       - grafana
+#       - prometheus
+
+# - name: 下载相关软件包
+#   get_url:
+#     url: { { item.url } }
+#     dest: "/opt/monitor/{{ item.dir }}"
+#     loop:
+#       - { dir: node_exporter, url }
+#       - { dir: mysqld_exporter, url }
+#       - { dir: prometheus, url }
+#       - { dir: grafana, url }
+
