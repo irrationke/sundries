@@ -17,3 +17,9 @@ tail -f filename.txt
 
 tail -n 10 filename.txt | nl
 ```
+
+# 展示某路径从大到小的占用排序
+
+```shell
+du -ahx / | sort -rh | head -n 50
+```
