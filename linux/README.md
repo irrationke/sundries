@@ -40,3 +40,21 @@
    ```bash
    sudo iptraf-ng
    ```
+
+# 添加特定ip连接的防火墙
+
+## 开放端口 9100
+
+sudo firewall-cmd --zone=public --add-port=9100/tcp --permanent
+
+## 只允许特定 IP 地址访问端口 9100
+
+```shell
+sudo firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.1.100" port port=9100 protocol=tcp accept' --permanent
+```
+
+## 重新加载 firewalld 以应用更改
+
+```shell
+sudo firewall-cmd --reload
+```
