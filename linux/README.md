@@ -66,3 +66,18 @@ ssh-keygen -m PEM -t rsa -b 4096 -C "name@hostname"
 # 参数解析 -m 密钥格式 -t 密钥类型 -b 密钥位数 -C 公钥末尾识别文本 -f 保存名称 -N 私钥密码
 ```
 
+# Linux下的btmp、wtmp和utmp日志文件
+
+- btmp为ssh登录失败日志
+
+- utmp 文件记录用户登录信息，包括用户登录的终端，登出状态，系统时间，当前系统的状态，系统启动的时间（被 uptime 命令使用）等等
+
+- wtmp 会记录 utmp 文件的历史记录，包括了当前登录用户信息和历史用户登录信息
+
+- 查看方法
+
+  - 使用last -f /var/log/btmp
+
+  - `lastb` 命令，默认会读取 `/var/log/btmp` 文件
+
+  - utmpdump /var/log/btmp
