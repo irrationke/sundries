@@ -23,3 +23,9 @@ tail -n 10 filename.txt | nl
 ```shell
 du -ahx / | sort -rh | head -n 50
 ```
+
+## 查看工具所在路径
+
+```zsh
+which command
+```
