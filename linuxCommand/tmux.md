@@ -23,3 +23,8 @@ tmux new -s <session-name>
 `tmux split-window` `trl+b "` 上下划分
 
 `tmux split-window -h` `Ctrl+b %` 左右划分
+
+## 加入复制模式
+
+`Ctrl+b [`
+
